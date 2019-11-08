@@ -46,6 +46,8 @@ const OPAQUE_LEN: usize = 192;
 impl Context {
     #[inline]
     pub fn from_key(Key(key_and_nonce): Key) -> Self {
+        // TODO change to use CRYPTO_poly1305_XXX
+
         extern "C" {
             fn poly1305_blocks(
                 state: &mut Opaque,

@@ -104,6 +104,8 @@ impl Key {
         in_out_len: usize,
         output: *mut u8,
     ) {
+        // TODO: Change to call CRYPTO_chacha_20
+
         let iv = match counter {
             CounterOrIv::Counter(counter) => counter.into(),
             CounterOrIv::Iv(iv) => {
