@@ -86,14 +86,14 @@ impl Key {
             #[cfg(not(target_arch = "aarch64"))]
             _ => {
                 extern "C" {
-                    fn GFp_aes_nohw_set_encrypt_key(
+                    fn aes_nohw_set_encrypt_key(
                         user_key: *const u8,
                         bits: c::uint,
                         key: &mut AES_KEY,
                     ) -> ZeroMeansSuccess;
                 }
                 Result::from(unsafe {
-                    GFp_aes_nohw_set_encrypt_key(
+                    aes_nohw_set_encrypt_key(
                         bytes.as_ptr(),
                         key_bits.as_usize_bits() as c::uint,
                         &mut key,
@@ -136,10 +136,10 @@ impl Key {
             #[cfg(not(target_arch = "aarch64"))]
             _ => {
                 extern "C" {
-                    fn GFp_aes_nohw_encrypt(a: *const Block, r: *mut Block, key: &AES_KEY);
+                    fn aes_nohw_encrypt(a: *const Block, r: *mut Block, key: &AES_KEY);
                 }
                 unsafe {
-                    GFp_aes_nohw_encrypt(aliasing_const, aliasing_mut, &self.inner);
+                    aes_nohw_encrypt(aliasing_const, aliasing_mut, &self.inner);
                 }
             }
         }
