@@ -18,8 +18,7 @@ use core::{
     ops::{Add, AddAssign, BitAnd, BitOr, BitXor, Not, Shr},
 };
 
-#[cfg(not(any(target_arch = "aarch64", target_arch = "arm", target_arch = "x86_64")))]
-pub(super) extern "C" fn sha256_block_data_order(
+pub(super) extern "C" fn GFp_sha256_block_data_order(
     state: &mut super::State,
     data: *const u8,
     num: c::size_t,
@@ -28,8 +27,7 @@ pub(super) extern "C" fn sha256_block_data_order(
     *state = block_data_order(*state, data, num)
 }
 
-#[cfg(not(any(target_arch = "aarch64", target_arch = "arm", target_arch = "x86_64")))]
-pub(super) extern "C" fn sha512_block_data_order(
+pub(super) extern "C" fn GFp_sha512_block_data_order(
     state: &mut super::State,
     data: *const u8,
     num: c::size_t,
@@ -376,18 +374,4 @@ impl Sha2 for Wrapping<u64> {
         Self(0x5fcb6fab3ad6faec),
         Self(0x6c44198c4a475817),
     ];
-}
-
-#[cfg(any(target_arch = "aarch64", target_arch = "arm", target_arch = "x86_64"))]
-extern "C" {
-    pub(super) fn sha256_block_data_order(
-        state: &mut super::State,
-        data: *const u8,
-        num: c::size_t,
-    );
-    pub(super) fn sha512_block_data_order(
-        state: &mut super::State,
-        data: *const u8,
-        num: c::size_t,
-    );
 }
