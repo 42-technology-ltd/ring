@@ -171,7 +171,7 @@ pub(crate) mod arm {
     pub(crate) struct Feature {
         #[cfg_attr(
             any(
-                target_os = "ios",
+                any(target_os = "ios", target_os = "none"),
                 not(any(target_arch = "arm", target_arch = "aarch64"))
             ),
             allow(dead_code)
@@ -199,6 +199,11 @@ pub(crate) mod arm {
             }
 
             #[cfg(not(any(target_arch = "arm", target_arch = "aarch64")))]
+            {
+                return false;
+            }
+
+            #[cfg(target_os = "none")]
             {
                 return false;
             }

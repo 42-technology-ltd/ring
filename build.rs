@@ -183,7 +183,6 @@ fn cpp_flags(target: &Target) -> &'static [&'static str] {
             "-Wenum-compare",
             "-Wfloat-equal",
             "-Wformat=2",
-            "-Winline",
             "-Winvalid-pch",
             "-Wmissing-field-initializers",
             "-Wmissing-include-dirs",
@@ -474,6 +473,7 @@ fn build_library(
             }
             _ => {
                 let _ = c.flag("-Wl,--gc-sections".into());
+                let _ = c.flag("-DOPENSSL_NO_ASM".into());
             }
         }
         for o in objs {
@@ -482,6 +482,8 @@ fn build_library(
 
         // Handled below.
         let _ = c.cargo_metadata(false);
+
+        let _ = c.pic(false);
 
         c.compile(
             lib_path
@@ -537,6 +539,9 @@ fn cc(
 ) -> Command {
     let mut c = cc::Build::new();
     let _ = c.include("include");
+    let _ = c.flag("-DOPENSSL_NO_ASM".into());
+    let _ = c.pic(false);
+
     match ext {
         "c" => {
             for f in c_flags(target) {
@@ -644,10 +649,10 @@ fn run_command(mut cmd: Command) {
     }
 }
 
-fn sources_for_arch(arch: &str) -> Vec<PathBuf> {
+fn sources_for_arch(_arch: &str) -> Vec<PathBuf> {
     RING_SRCS
         .iter()
-        .filter(|&&(archs, _)| archs.is_empty() || archs.contains(&arch))
+        .filter(|&&(archs, _)| archs.is_empty())
         .map(|&(_, p)| PathBuf::from(p))
         .collect::<Vec<_>>()
 }
